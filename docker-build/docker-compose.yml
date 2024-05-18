@@ -1,0 +1,30 @@
+version: "3"
+services:
+  book-library-backend:
+    build:
+      context: .
+      dockerfile: ../book-library-backend/docker/Dockerfile
+    container_name: book-library-backend
+    ports:
+      - 8081:8000
+    volumes:
+      - ../book-library-backend/:/opt/app
+      - ../book-library-backend/docker/debug-backend/20-xdebug.ini:/usr/local/etc/php/conf.d/20-xdebug.ini
+    working_dir: /opt/app
+    stdin_open: true
+    tty: true
+    networks:
+      - book-library-net
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: book
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - "3306:3306"
+    networks:
+      - book-library-net
+networks:
+  book-library-net:
